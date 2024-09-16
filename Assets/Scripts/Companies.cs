@@ -10,12 +10,15 @@ public class Companies : MonoBehaviour
 
     public float speed;
     float timer = 0;
-    public float profit;
+    public float profit, profitGain;
     public float price;
     public bool isPurchased;
+    public int amount;
 
-    public TextMeshProUGUI priceText, timerText, profitText;
-    public Slider progressSlider;
+    public bool canUseTimer;
+
+    public TextMeshProUGUI priceText, timerText, profitText, amountText;
+    public Slider progressSlider, amountSlider;
 
     // Start is called before the first frame update
     void Start()
@@ -39,10 +42,18 @@ public class Companies : MonoBehaviour
             }
             else
             {
-                progressSlider.value = timer / speed;
-                int seconds = Mathf.FloorToInt(timer);
-                int milliseconds = Mathf.FloorToInt((timer - seconds) * 100);
-                timerText.text = string.Format("{0:0}:{1:00}", seconds, milliseconds);
+                if (canUseTimer)
+                {
+                    progressSlider.value = timer / speed;
+                    int seconds = Mathf.FloorToInt(timer);
+                    int milliseconds = Mathf.FloorToInt((timer - seconds) * 100);
+                    timerText.text = string.Format("{0:0}:{1:00}", seconds, milliseconds);
+                }
+                else if (!canUseTimer)
+                {
+                    progressSlider.value = progressSlider.minValue;
+                    timerText.text = "0:00";
+                }
             }
         }
     }
@@ -50,28 +61,46 @@ public class Companies : MonoBehaviour
     public void BuyCompany()
     {
 
-        if (FindObjectOfType<Bank>().money - price >= 0)
+        if (FindObjectOfType<Bank>().money - price < 0)
+        {
+            return;
+        }
+        else
         {
             if (!isPurchased)
             {
                 isPurchased = true;
+                canUseTimer = true;
                 FindObjectOfType<Bank>().money -= price;
-                UpdateText();
             }
             else
             {
-                price *= 1.2f;
-                speed *= 0.8f;
                 FindObjectOfType<Bank>().money -= price;
-                UpdateText();
+                price *= 1.2f;
+                profit += profitGain;
+            }
+            amount++;
+            UpdateText();
+            if (amount >= amountSlider.maxValue)
+            {
+                amountSlider.minValue = amount;
+                amountSlider.maxValue = amount + 10;
+                speed *= 0.8f;
+            }
+            if (speed <= 0.05f)
+            {
+                speed = 0.05f;
+                canUseTimer = false;
             }
         }
-        
     }
 
     void UpdateText()
     {
         priceText.text = "$" + price.ToString("F2");
         profitText.text = "$" + profit.ToString();
+        amountText.text = amount.ToString();
+
+        amountSlider.value = amount;
     }
 }
