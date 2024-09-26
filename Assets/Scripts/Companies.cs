@@ -95,7 +95,7 @@ public class Companies : MonoBehaviour
         }
     }
 
-    void UpdateText()
+    public void UpdateText()
     {
         priceText.text = "$" + price.ToString("F2");
         profitText.text = "$" + profit.ToString();
