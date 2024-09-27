@@ -7,20 +7,22 @@ public class Upgrades : MonoBehaviour
 {
     public float cost;
     public TextMeshProUGUI upgradeText, costText;
-
+    public string companyName;
     public Companies company;
+
+    public Transform anchorPoint;
 
     // Start is called before the first frame update
     void Start()
     {
-        upgradeText.text = "Permanently double " + company + " profits";
+        upgradeText.text = "Permanently double " + companyName + " profits";
         costText.text = "$" + cost.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        transform.position = anchorPoint.position;
     }
 
     public void Buy()
