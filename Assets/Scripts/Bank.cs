@@ -13,6 +13,17 @@ public class Bank : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moneyText.text = "$" + money.ToString("F2");
+        if (money > 1000000000)
+        {
+            moneyText.text = "$" + (money/1000000000).ToString("F3") + "B";
+        }
+        else if (money > 1000000)
+        {
+            moneyText.text = "$" + (money/1000000).ToString("F3") + "M";
+        }
+        else
+        {
+            moneyText.text = "$" + money.ToString("F2");
+        }
     }
 }

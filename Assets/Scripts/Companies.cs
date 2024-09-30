@@ -45,9 +45,10 @@ public class Companies : MonoBehaviour
                 if (canUseTimer)
                 {
                     progressSlider.value = timer / speed;
+                    int minutes = Mathf.FloorToInt(timer / 60);
                     int seconds = Mathf.FloorToInt(timer);
                     int milliseconds = Mathf.FloorToInt((timer - seconds) * 100);
-                    timerText.text = string.Format("{0:0}:{1:00}", seconds, milliseconds);
+                    timerText.text = string.Format("{0:0}:{1:00}:{2:00}", minutes, seconds, milliseconds);
                 }
                 else if (!canUseTimer)
                 {
@@ -76,7 +77,7 @@ public class Companies : MonoBehaviour
             else
             {
                 FindObjectOfType<Bank>().money -= price;
-                price *= 1.2f;
+                price *= 1.08f;
                 profit += profitGain;
             }
             amount++;
@@ -85,7 +86,7 @@ public class Companies : MonoBehaviour
             {
                 amountSlider.minValue = amount;
                 amountSlider.maxValue = amount + 10;
-                speed *= 0.8f;
+                speed *= 0.6f;
             }
             if (speed <= 0.05f)
             {
@@ -97,8 +98,32 @@ public class Companies : MonoBehaviour
 
     public void UpdateText()
     {
-        priceText.text = "$" + price.ToString("F2");
-        profitText.text = "$" + profit.ToString();
+        if (price >= 1000000000)
+        {
+            priceText.text = "$" + (price / 1000000000).ToString("F3") + "B";
+        }
+        else if (price >= 1000000)
+        {
+            priceText.text = "$" + (price/1000000).ToString("F3") + "M";
+        }
+        else
+        {
+            priceText.text = "$" + price.ToString("F2");
+        }
+
+        if (profit >= 1000000000)
+        {
+            profitText.text = "$" + (price / 1000000000).ToString("F3") + "B";
+        }
+        else if (profit >= 1000000)
+        {
+            profitText.text = "$" + (profit/1000000).ToString("F3") + "M";
+        }
+        else
+        {
+            profitText.text = "$" + profit.ToString("F2");
+        }
+
         amountText.text = amount.ToString();
 
         amountSlider.value = amount;
